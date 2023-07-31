@@ -5,8 +5,10 @@ import pandas as pd
 
 class OCTDataset(data.Dataset):
     def __init__(self, df, img_dir, transforms):
-
-        self.df = pd.read_csv(df)
+        if df.endswith(".xlsx"):
+            self.df = pd.read_excel(df)
+        else:
+            self.df = pd.read_csv(df)
         self.img_dir = img_dir
         self.transforms = transforms
 
