@@ -4,6 +4,7 @@ import torch
 import sys
 import numpy as np
 import torch.nn as nn
+import math
 
 def get_negative_mask(batch_size):
     negative_mask = torch.ones((batch_size, 2 * batch_size), dtype=bool)
@@ -292,13 +293,15 @@ def train_Combined(train_loader, model, criterion, optimizer, epoch, opt):
             loss = criterion(features, labels1) + criterion(features, labels2) + criterion(features, labels3) + criterion(features,labels4) + criterion(features,labels5)
         else:
             loss = 'Null'
-        # update metric
-        losses.update(loss.item(), bsz)
+        
+        if not math.isnan(loss.item()):    
+            # update metric
+            losses.update(loss.item(), bsz)
 
-        # SGD
-        optimizer.zero_grad()
-        loss.backward()  # todo: don't backward if loss.item() is nan?
-        optimizer.step()
+            # SGD
+            optimizer.zero_grad()
+            loss.backward()  # todo: don't backward if loss.item() is nan?
+            optimizer.step()
 
         # measure elapsed time
         batch_time.update(time.time() - end)
