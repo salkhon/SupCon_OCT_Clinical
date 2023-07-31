@@ -297,7 +297,7 @@ def train_Combined(train_loader, model, criterion, optimizer, epoch, opt):
 
         # SGD
         optimizer.zero_grad()
-        loss.backward()
+        loss.backward()  # todo: don't backward if loss.item() is nan?
         optimizer.step()
 
         # measure elapsed time
