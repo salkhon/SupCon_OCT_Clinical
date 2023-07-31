@@ -98,11 +98,12 @@ def set_loader(opt):
 
 
     if opt.dataset =='OCT':
+        # todo: pretrain on competition dataset
         csv_path_train = opt.train_csv_path
         data_path_train = opt.train_image_path
         train_dataset = OCTDataset(csv_path_train,data_path_train,transforms = TwoCropTransform(train_transform))
     elif opt.dataset == 'CombinedBio':
-        csv_path_train = '/home/kiran/Desktop/Dev/SupCon_OCT_Clinical/final_csvs_1/biomarker_csv_files/complete_biomarker_training.csv'
+        csv_path_train = './final_csvs_1/biomarker_csv_files/complete_biomarker_training.csv'
         data_path_train = opt.train_image_path
         train_dataset = BiomarkerDatasetAttributes(csv_path_train,data_path_train,transforms = TwoCropTransform(train_transform))
     elif opt.dataset == 'Prime':
