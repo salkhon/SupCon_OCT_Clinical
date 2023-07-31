@@ -33,9 +33,9 @@ def parse_option():
                         help='momentum')
     parser.add_argument('--train_csv_path', type=str, default='train data csv')
     parser.add_argument('--test_csv_path', type=str, default='test data csv')
-    parser.add_argument('--train_image_path', type=str, default='train data csv')
-    parser.add_argument('--test_image_path', type=str, default='test data csv')
-    parser.add_argument('--results_dir_contrastive', type=str, default='/home/kiran/Desktop/Dev/SupCon_OCT_Clinical/results.txt')
+    parser.add_argument('--train_image_path', type=str, default='/kaggle/input/olives-vip-cup-2023/2023 IEEE SPS Video and Image Processing (VIP) Cup - Ophthalmic Biomarker Detection/TRAIN/OLIVES')
+    parser.add_argument('--test_image_path', type=str, default='/kaggle/input/olives-vip-cup-2023/2023 IEEE SPS Video and Image Processing (VIP) Cup - Ophthalmic Biomarker Detection/TRAIN/OLIVES')
+    parser.add_argument('--results_dir_contrastive', type=str, default='/kaggle/working/results.txt')
     parser.add_argument('--percentage', type=int, default=10,
                         help='momentum')
     parser.add_argument('--discrete_level', type=int, default=10,
