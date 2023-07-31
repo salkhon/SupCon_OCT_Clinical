@@ -1,3 +1,6 @@
+import sys
+sys.path.append("/kaggle/working/SupCon_OCT_Clinical")
+
 from config.config_supcon import parse_option
 from utils.utils_supcon import set_loader, set_model_contrast
 from utils.utils import set_optimizer, adjust_learning_rate, save_model
