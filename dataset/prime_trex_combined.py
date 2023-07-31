@@ -18,7 +18,11 @@ class CombinedDataset(data.Dataset):
         return len(self.df)
 
     def __getitem__(self, idx):
-        path = self.img_dir + self.df.iloc[idx, 0]
+        rel_path = self.df.iloc[idx, 0]
+        if rel_path.startswith("/TREX DME"):
+            rel_path = f"/TREX_DME{rel_path}"
+
+        path = self.img_dir + rel_path
         image = Image.open(path).convert("L")
         image = np.array(image)
         image = Image.fromarray(image)
