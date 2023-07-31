@@ -15,7 +15,7 @@ from torchvision import transforms, datasets
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from datasets.biomarker import BiomarkerDatasetAttributes
+from dataset.biomarker import BiomarkerDatasetAttributes
 
 import scipy.stats as stats
 

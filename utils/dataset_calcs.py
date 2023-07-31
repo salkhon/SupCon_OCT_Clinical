@@ -15,7 +15,7 @@ from torchvision import transforms
 
 
 
-from datasets.prime_trex_combined import CombinedDataset
+from dataset.prime_trex_combined import CombinedDataset
 csv_path_train = '/final_csvs_1/datasets_combined/trex_dme_compressed.csv'
 data_path_train ='/data/Datasets/Prime_FULL'
 mean = (.1651)

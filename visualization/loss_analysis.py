@@ -15,8 +15,8 @@ from torchvision import transforms, datasets
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from datasets.biomarker import BiomarkerDatasetAttributes
-from datasets.biomarker_severity import BiomarkerDatasetAttributes_Severity
+from dataset.biomarker import BiomarkerDatasetAttributes
+from dataset.biomarker_severity import BiomarkerDatasetAttributes_Severity
 import scipy.stats as stats
 
 def set_model(opt):

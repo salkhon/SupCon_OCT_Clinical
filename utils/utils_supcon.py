@@ -1,12 +1,12 @@
 from torchvision import transforms, datasets
 
-from datasets.oct_dataset import OCTDataset
-from datasets.biomarker import BiomarkerDatasetAttributes
+from dataset.oct_dataset import OCTDataset
+from dataset.biomarker import BiomarkerDatasetAttributes
 from utils.utils import TwoCropTransform
-from datasets.prime import PrimeDatasetAttributes
-from datasets.prime_trex_combined import CombinedDataset
-from datasets.recovery import recovery
-from datasets.trex import TREX
+from dataset.prime import PrimeDatasetAttributes
+from dataset.prime_trex_combined import CombinedDataset
+from dataset.recovery import recovery
+from dataset.trex import TREX
 import torch
 from models.resnet import SupConResNet, SupConResNet_Original
 from loss.loss import SupConLoss
