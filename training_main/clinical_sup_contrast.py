@@ -1,10 +1,11 @@
 import sys
 sys.path.append("/kaggle/working/SupCon_OCT_Clinical")
+import os
+os.environ["PYTHONPATH"] = "/kaggle/working/SupCon_OCT_Clinical"
 
 from config.config_supcon import parse_option
 from utils.utils_supcon import set_loader, set_model_contrast
 from utils.utils import set_optimizer, adjust_learning_rate, save_model
-import os
 import time
 import tensorboard_logger as tb_logger
 from training_supcon.training_one_epoch_trex import train_TREX
