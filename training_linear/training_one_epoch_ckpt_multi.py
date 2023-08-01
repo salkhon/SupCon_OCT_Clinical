@@ -125,8 +125,8 @@ def main_multilabel():
             loss, acc = train_OCT_multilabel(train_loader, model, classifier, criterion,
                               optimizer, epoch, opt)
             time2 = time.time()
-            print('Train epoch {}, total time {:.2f}, accuracy:{:.2f}'.format(
-                epoch, time2 - time1, acc))
+            print('Train epoch {}, total time {:.2f}, loss:{:.3f}, accuracy:{:.2f}'.format(
+                epoch, time2 - time1, loss, acc))
             
             if epoch % opt.save_freq == 0:
                 # todo: save
