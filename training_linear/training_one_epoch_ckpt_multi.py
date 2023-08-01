@@ -18,6 +18,7 @@ from sklearn.metrics import (
 )
 import pandas as pd
 from PIL import Image
+from pathlib import Path
 
 
 def train_OCT_multilabel(
@@ -166,7 +167,7 @@ def main_multilabel():
     # create submission file
     submission_df = pd.read_csv(opt.submission_path)
     for idx, row in submission_df.iterrows():
-        img_path = row["Path (Trial/Image Type/Subject/Visit/Eye/Image Name)"]
+        img_path = Path(opt.submission_img_path, row["Path (Trial/Image Type/Subject/Visit/Eye/Image Name)"])
         image = Image.open(img_path).convert("L")
         image = np.array(image)
         image = Image.fromarray(image)
