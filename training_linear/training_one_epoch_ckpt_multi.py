@@ -184,7 +184,7 @@ def main_multilabel():
         image = Image.fromarray(image)
         image = val_transform(image)
         image = image.float().to(device)
-        output = model.encoder(image)
+        output = model.encoder([image])
         output = classifier(output.detach())
         output = torch.round(output)
         print(output)
