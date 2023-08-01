@@ -17,6 +17,7 @@ from sklearn.metrics import (
     classification_report,
 )
 import pandas as pd
+from PIL import Image
 
 
 def train_OCT_multilabel(
@@ -165,7 +166,12 @@ def main_multilabel():
     # create submission file
     submission_df = pd.read_csv(opt.submission_path)
     for idx, row in submission_df.iterrows():
-        output = full_model(row["Path (Trial/Image Type/Subject/Visit/Eye/Image Name)"])
+        img_path = row["Path (Trial/Image Type/Subject/Visit/Eye/Image Name)"]
+        image = Image.open(img_path).convert("L")
+        image = np.array(image)
+        image = Image.fromarray(image)
+        # image = self.transforms(image)
+        output = full_model(image)
         output = output > 0.5
         print(output)
         for i in range(1, 7):
