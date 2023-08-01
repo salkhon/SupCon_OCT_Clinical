@@ -20,6 +20,7 @@ import pandas as pd
 from PIL import Image
 from pathlib import Path
 from torchvision import transforms
+from tqdm import tqdm
 
 
 def train_OCT_multilabel(
@@ -174,7 +175,7 @@ def main_multilabel():
         ]
     )
     submission_df = pd.read_csv(opt.submission_path)
-    for idx, row in submission_df.iterrows():
+    for idx, row in tqdm(submission_df.iterrows(), total=len(submission_df)):
         img_path = Path(
             opt.submission_img_path,
             row["Path (Trial/Image Type/Subject/Visit/Eye/Image Name)"],
@@ -186,10 +187,9 @@ def main_multilabel():
         image = image.unsqueeze(0)
         image = image.float().to(device)
         output = model.encoder(image)
-        output = classifier(output.detach())
+        output = classifier(output)
         output = torch.round(torch.sigmoid(output))
         output = output.squeeze(0)
-        print(output)
         for i in range(1, 7):
             submission_df.at[idx, f"B{i}"] = int(output[i-1])
 
