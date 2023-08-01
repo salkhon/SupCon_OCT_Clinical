@@ -42,6 +42,7 @@ def parse_option():
     parser.add_argument('--test_csv_path', type=str, default='test data csv')
     parser.add_argument('--train_image_path', type=str, default='/data/Datasets')
     parser.add_argument('--test_image_path', type=str, default='/data/Datasets')
+    parser.add_argument('--submission_path', type=str, default='/kaggle/input/olives-vip-cup-2023/2023 IEEE SPS Video and Image Processing (VIP) Cup - Ophthalmic Biomarker Detection/TEST/test_set_submission_template.csv')
     parser.add_argument('--results_dir_contrastive', type=str, default='/kaggle/working/results.txt')
     parser.add_argument('--save_path', type=str, default='./save/BioMarker/final.pth')
     parser.add_argument('--img_dir', type=str, default='image directory')

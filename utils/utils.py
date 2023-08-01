@@ -185,6 +185,7 @@ def set_loader_new(opt):
                 csv_path_test, data_path_test, transforms=val_transform
             )
         elif opt.multi == 1 and opt.super != 3:
+            print("Loading multilabel biomarker data")
             train_dataset = BiomarkerDatasetAttributes_MultiLabel(
                 csv_path_train, data_path_train, transforms=train_transform
             )

@@ -132,14 +132,23 @@ def main_multilabel():
                 pass
 
         # eval for one epoch
-        loss, r = validate_multilabel(test_loader, model, classifier, criterion, opt)
+        # loss, r = validate_multilabel(test_loader, model, classifier, criterion, opt)
 
-        r_list.append(r)
+        # r_list.append(r)
 
         # save model
         full_model = torch.nn.Sequential(model, classifier)
         torch.save(full_model.state_dict(), opt.save_path)
 
-    df = pd.DataFrame({'AUROC': r_list})
-    excel_name = opt.backbone_training + '_' + opt.biomarker + opt.model + str(opt.percentage) + 'multiAUROC' + str(opt.patient_split) + '.csv'
-    df.to_csv(excel_name, index=False)
+    # df = pd.DataFrame({'AUROC': r_list})
+    # excel_name = opt.backbone_training + '_' + opt.biomarker + opt.model + str(opt.percentage) + 'multiAUROC' + str(opt.patient_split) + '.csv'
+    # df.to_csv(excel_name, index=False)
+
+    # create submission file
+    submission_df = pd.read_csv(opt.submission_path)
+    for idx, row in submission_df.iterrows():
+        output = full_model(row["Path (Trial/Image Type/Subject/Visit/Eye/Image Name)"])
+        output = output > 0.5
+        print(output)
+        for i in range(1, 7):
+            submission_df.iloc[idx, f"B{i}"] = output[i]
