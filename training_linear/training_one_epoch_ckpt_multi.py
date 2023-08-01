@@ -191,7 +191,7 @@ def main_multilabel():
         output = torch.round(torch.sigmoid(output))
         output = output.squeeze(0)
         for i in range(1, 7):
-            submission_df.at[idx, f"B{i}"] = int(output[i-1])z
+            submission_df.at[idx, f"B{i}"] = int(output[i-1])
 
     for i in range(1, 7):
         submission_df[f"B{i}"] = submission_df[f"B{i}"].astype(int)
