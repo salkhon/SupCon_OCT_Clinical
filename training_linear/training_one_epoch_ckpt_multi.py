@@ -183,10 +183,10 @@ def main_multilabel():
         image = np.array(image)
         image = Image.fromarray(image)
         image = val_transform(image)
-        image = image.to(device)
+        image = image.float().to(device)
         output = model.encoder(image)
-        output = classifier(output)
-        output = output > 0.5
+        output = classifier(output.detach())
+        output = torch.round(output)
         print(output)
         for i in range(1, 7):
             submission_df.iloc[idx, f"B{i}"] = output[i]
