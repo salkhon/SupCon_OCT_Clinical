@@ -188,8 +188,9 @@ def main_multilabel():
         output = model.encoder(image)
         output = classifier(output.detach())
         output = torch.round(output)
+        output = output.squeeze(0)
         print(output)
         for i in range(1, 7):
-            submission_df.iloc[idx, f"B{i}"] = output[i]
+            submission_df.iloc[idx, f"B{i}"] = output[i-1]
 
     submission_df.to_csv("/kaggle/working/submission.csv", index=False)
