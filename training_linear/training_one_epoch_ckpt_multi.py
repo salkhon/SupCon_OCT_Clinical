@@ -189,7 +189,7 @@ def main_multilabel():
         output = model.encoder(image)
         output = classifier(output)
         output = torch.round(torch.sigmoid(output))
-        output = output.to("cpu").numpy().astype(int)
+        output = output.detach().to("cpu").numpy().astype(int)
         output = output.squeeze(0)
         for i in range(1, 7):
             submission_df.at[idx, f"B{i}"] = int(output[i-1])
