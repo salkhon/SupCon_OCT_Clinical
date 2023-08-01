@@ -183,8 +183,9 @@ def main_multilabel():
         image = np.array(image)
         image = Image.fromarray(image)
         image = val_transform(image)
-
-        output = full_model(image)
+        image = image.to(device)
+        output = model.encoder(image)
+        output = classifier(output)
         output = output > 0.5
         print(output)
         for i in range(1, 7):
