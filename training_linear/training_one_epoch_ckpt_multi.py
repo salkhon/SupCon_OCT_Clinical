@@ -158,7 +158,7 @@ def main_multilabel():
         # r_list.append(r)
 
         # save model
-        full_model = torch.nn.Sequential(model, classifier)
+        full_model = torch.nn.Sequential(model.encoder, classifier)
         torch.save(full_model.state_dict(), "/kaggle/working/model.pth")
 
     # df = pd.DataFrame({'AUROC': r_list})
@@ -183,7 +183,7 @@ def main_multilabel():
         image = np.array(image)
         image = Image.fromarray(image)
         image = val_transform(image)
-        # image = self.transforms(image)
+
         output = full_model(image)
         output = output > 0.5
         print(output)
