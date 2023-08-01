@@ -1,4 +1,7 @@
 from __future__ import print_function
+import sys
+sys.path.append("/kaggle/working/SupCon_OCT_Clinical")
+
 from config.config_linear import parse_option
 from training_linear.training_one_epoch_ckpt import main
 from training_linear.training_one_epoch_fusion import main_supervised_fusion
