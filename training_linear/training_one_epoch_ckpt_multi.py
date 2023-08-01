@@ -1,13 +1,27 @@
 import torch
-from utils.utils import AverageMeter,warmup_learning_rate
+from utils.utils import AverageMeter, warmup_learning_rate
 import sys
 import time
 import numpy as np
 from config.config_linear import parse_option
-from utils.utils import set_loader_new, set_model, set_optimizer, adjust_learning_rate, accuracy_multilabel
-from sklearn.metrics import average_precision_score,roc_auc_score, classification_report
+from utils.utils import (
+    set_loader_new,
+    set_model,
+    set_optimizer,
+    adjust_learning_rate,
+    accuracy_multilabel,
+)
+from sklearn.metrics import (
+    average_precision_score,
+    roc_auc_score,
+    classification_report,
+)
 import pandas as pd
-def train_OCT_multilabel(train_loader, model, classifier, criterion, optimizer, epoch, opt):
+
+
+def train_OCT_multilabel(
+    train_loader, model, classifier, criterion, optimizer, epoch, opt
+):
     """one epoch training"""
     model.eval()
     classifier.train()
@@ -26,7 +40,7 @@ def train_OCT_multilabel(train_loader, model, classifier, criterion, optimizer, 
         labels = bio_tensor
         labels = labels.float()
         bsz = labels.shape[0]
-        labels=labels.to(device)
+        labels = labels.to(device)
         # warm-up learning rate
         warmup_learning_rate(opt, epoch, idx, len(train_loader), optimizer)
 
@@ -52,11 +66,11 @@ def train_OCT_multilabel(train_loader, model, classifier, criterion, optimizer, 
 
         # print info
         if (idx + 1) % opt.print_freq == 0:
-            print('Train: [{0}][{1}/{2}]\t'.format(
-                epoch, idx + 1, len(train_loader)))
+            print("Train: [{0}][{1}/{2}]\t".format(epoch, idx + 1, len(train_loader)))
             sys.stdout.flush()
 
     return losses.avg, top1.avg
+
 
 def validate_multilabel(val_loader, model, classifier, criterion, opt):
     """validation"""
@@ -94,25 +108,25 @@ def validate_multilabel(val_loader, model, classifier, criterion, opt):
             batch_time.update(time.time() - end)
             end = time.time()
 
-
     label_array = np.array(label_list)
     out_array = np.array(out_list)
     out_array = np.concatenate(out_list, axis=0)
-    r = roc_auc_score(label_array, out_array, average='macro')
-
+    r = roc_auc_score(label_array, out_array, average="macro")
 
     return losses.avg, r
+
+
 def main_multilabel():
     best_acc = 0
     opt = parse_option()
 
     # build data loader
     device = opt.device
-    train_loader,  test_loader = set_loader_new(opt)
+    train_loader, test_loader = set_loader_new(opt)
 
     r_list = []
     # training routine
-    for i in range(0,1):
+    for i in range(0, 1):
         model, classifier, criterion = set_model(opt)
 
         optimizer = set_optimizer(opt, classifier)
@@ -121,12 +135,16 @@ def main_multilabel():
 
             # train for one epoch
             time1 = time.time()
-            loss, acc = train_OCT_multilabel(train_loader, model, classifier, criterion,
-                              optimizer, epoch, opt)
+            loss, acc = train_OCT_multilabel(
+                train_loader, model, classifier, criterion, optimizer, epoch, opt
+            )
             time2 = time.time()
-            print('Train epoch {}, total time {:.2f}, loss:{:.3f}, accuracy:{:.2f}'.format(
-                epoch, time2 - time1, loss, acc))
-            
+            print(
+                "Train epoch {}, total time {:.2f}, loss:{:.3f}, accuracy:{:.2f}".format(
+                    epoch, time2 - time1, loss, acc
+                )
+            )
+
             if epoch % opt.save_freq == 0:
                 # todo: save
                 pass
@@ -138,7 +156,7 @@ def main_multilabel():
 
         # save model
         full_model = torch.nn.Sequential(model, classifier)
-        torch.save(full_model.state_dict(), opt.save_path)
+        torch.save(full_model.state_dict(), "/kaggle/working/model.pth")
 
     # df = pd.DataFrame({'AUROC': r_list})
     # excel_name = opt.backbone_training + '_' + opt.biomarker + opt.model + str(opt.percentage) + 'multiAUROC' + str(opt.patient_split) + '.csv'
