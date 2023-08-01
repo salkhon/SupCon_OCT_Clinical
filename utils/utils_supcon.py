@@ -23,12 +23,6 @@ import torch.nn as nn
 def set_model_contrast(opt):
     model = SupConResNet_Original(name=opt.model)
 
-    if opt.is_cont_training == 1:
-        print("Loading previously trainded model")
-        ckpt = torch.load(opt.prev_model, map_location="cpu")
-        state_dict = ckpt["model"]
-        model.load_state_dict(state_dict)
-
     criterion = SupConLoss(temperature=opt.temp, device=opt.device)
     device = opt.device
     # enable synchronized Batch Normalization
@@ -44,6 +38,12 @@ def set_model_contrast(opt):
             model = model.to(device)
             criterion = criterion.to(device)
         cudnn.benchmark = True
+
+        if opt.is_cont_training == 1:
+            print("Loading previously trained model")
+            ckpt = torch.load(opt.prev_model, map_location="cpu")
+            state_dict = ckpt["model"]
+            model.load_state_dict(state_dict)
 
     return model, criterion
 
