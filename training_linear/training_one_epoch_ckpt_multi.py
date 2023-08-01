@@ -152,3 +152,5 @@ def main_multilabel():
         print(output)
         for i in range(1, 7):
             submission_df.iloc[idx, f"B{i}"] = output[i]
+
+    submission_df.to_csv("/kaggle/working/submission.csv")
