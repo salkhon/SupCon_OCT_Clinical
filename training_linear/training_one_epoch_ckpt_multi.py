@@ -19,6 +19,7 @@ from sklearn.metrics import (
 import pandas as pd
 from PIL import Image
 from pathlib import Path
+from torchvision import transforms
 
 
 def train_OCT_multilabel(
@@ -165,12 +166,23 @@ def main_multilabel():
     # df.to_csv(excel_name, index=False)
 
     # create submission file
+    val_transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=0.1706, std=0.2112),
+        ]
+    )
     submission_df = pd.read_csv(opt.submission_path)
     for idx, row in submission_df.iterrows():
-        img_path = Path(opt.submission_img_path, row["Path (Trial/Image Type/Subject/Visit/Eye/Image Name)"])
+        img_path = Path(
+            opt.submission_img_path,
+            row["Path (Trial/Image Type/Subject/Visit/Eye/Image Name)"],
+        )
         image = Image.open(img_path).convert("L")
         image = np.array(image)
         image = Image.fromarray(image)
+        image = val_transform(image)
         # image = self.transforms(image)
         output = full_model(image)
         output = output > 0.5
@@ -178,4 +190,4 @@ def main_multilabel():
         for i in range(1, 7):
             submission_df.iloc[idx, f"B{i}"] = output[i]
 
-    submission_df.to_csv("/kaggle/working/submission.csv")
+    submission_df.to_csv("/kaggle/working/submission.csv", index=False)
