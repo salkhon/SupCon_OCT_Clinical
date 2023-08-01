@@ -31,7 +31,7 @@ def train_OCT_multilabel(train_loader, model, classifier, criterion, optimizer, 
         warmup_learning_rate(opt, epoch, idx, len(train_loader), optimizer)
 
         # compute loss
-        with torch.no_grad():
+        with torch.no_grad():  # FROZEN
             features = model.encoder(images)
 
         output = classifier(features.detach())
@@ -54,6 +54,7 @@ def train_OCT_multilabel(train_loader, model, classifier, criterion, optimizer, 
         if (idx + 1) % opt.print_freq == 0:
             print('Train: [{0}][{1}/{2}]\t'.format(
                 epoch, idx + 1, len(train_loader)))
+            print(output)
             sys.stdout.flush()
 
     return losses.avg, top1.avg

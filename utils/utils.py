@@ -49,7 +49,7 @@ def set_model(opt):
     elif opt.multi == 1 and opt.super != 3:
         model = SupConResNet_Original(name=opt.model)
         criterion = torch.nn.BCEWithLogitsLoss()
-
+        print("Loading 6 class MLP")
         classifier = LinearClassifier(name=opt.model, num_classes=6)
 
     ckpt = torch.load(opt.ckpt, map_location="cpu")
