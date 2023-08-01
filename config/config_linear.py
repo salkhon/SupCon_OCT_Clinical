@@ -6,7 +6,7 @@ def parse_option():
 
     parser.add_argument('--print_freq', type=int, default=10,
                         help='print frequency')
-    parser.add_argument('--save_freq', type=int, default=50,
+    parser.add_argument('--save_freq', type=int, default=10,
                         help='save frequency')
     parser.add_argument('--batch_size', type=int, default=128,
                         help='batch_size')
@@ -42,7 +42,8 @@ def parse_option():
     parser.add_argument('--test_csv_path', type=str, default='test data csv')
     parser.add_argument('--train_image_path', type=str, default='/data/Datasets')
     parser.add_argument('--test_image_path', type=str, default='/data/Datasets')
-    parser.add_argument('--results_dir_contrastive', type=str, default='/home/kiran/Desktop/Dev/SupCon_OCT_Clinical/results.txt')
+    parser.add_argument('--results_dir_contrastive', type=str, default='/kaggle/working/results.txt')
+    parser.add_argument('--save_path', type=str, default='./save/BioMarker/final.pth')
     parser.add_argument('--img_dir', type=str, default='image directory')
     parser.add_argument('--model_type', type=str, default='bcva')
     parser.add_argument('--multi', type=int, default=0)

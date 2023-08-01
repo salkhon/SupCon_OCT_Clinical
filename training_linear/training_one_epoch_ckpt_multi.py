@@ -18,7 +18,7 @@ def train_OCT_multilabel(train_loader, model, classifier, criterion, optimizer, 
     top1 = AverageMeter()
     device = opt.device
     end = time.time()
-    for idx, (image, bio_tensor,eye_id,bcva,cst,patient) in enumerate(train_loader):
+    for idx, (image, bio_tensor) in enumerate(train_loader):
         data_time.update(time.time() - end)
 
         images = image.to(device)
@@ -70,7 +70,7 @@ def validate_multilabel(val_loader, model, classifier, criterion, opt):
     out_list = []
     with torch.no_grad():
         end = time.time()
-        for idx, (image, bio_tensor,eye_id,bcva,cst,patient) in enumerate(val_loader):
+        for idx, (image, bio_tensor) in enumerate(val_loader):
             images = image.float().to(device)
 
             labels = bio_tensor
@@ -126,11 +126,19 @@ def main_multilabel():
             time2 = time.time()
             print('Train epoch {}, total time {:.2f}, accuracy:{:.2f}'.format(
                 epoch, time2 - time1, acc))
+            
+            if epoch % opt.save_freq == 0:
+                # todo: save
+                pass
 
-    # eval for one epoch
+        # eval for one epoch
         loss, r = validate_multilabel(test_loader, model, classifier, criterion, opt)
 
         r_list.append(r)
+
+        # save model
+        full_model = torch.nn.Sequential(model, classifier)
+        torch.save(full_model.state_dict(), opt.save_path)
 
     df = pd.DataFrame({'AUROC': r_list})
     excel_name = opt.backbone_training + '_' + opt.biomarker + opt.model + str(opt.percentage) + 'multiAUROC' + str(opt.patient_split) + '.csv'

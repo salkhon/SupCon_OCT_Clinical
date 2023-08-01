@@ -21,7 +21,7 @@ def set_model_contrast(opt):
 
 
     model = SupConResNet_Original(name=opt.model)
-
+    
     criterion = SupConLoss(temperature=opt.temp,device=opt.device)
     device = opt.device
     # enable synchronized Batch Normalization
