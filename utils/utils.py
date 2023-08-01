@@ -50,7 +50,7 @@ def set_model(opt):
         model = SupConResNet_Original(name=opt.model)
         criterion = torch.nn.BCEWithLogitsLoss()
         print("Loading 6 class MLP")
-        classifier = LinearClassifier_MultiLabel(name=opt.model, num_classes=6)
+        classifier = LinearClassifier(name=opt.model, num_classes=6)
 
     ckpt = torch.load(opt.ckpt, map_location="cpu")
     state_dict = ckpt["model"]

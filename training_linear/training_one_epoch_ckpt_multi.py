@@ -187,10 +187,10 @@ def main_multilabel():
         image = image.float().to(device)
         output = model.encoder(image)
         output = classifier(output.detach())
-        output = torch.round(output)
+        output = torch.round(torch.sigmoid(output))
         output = output.squeeze(0)
         print(output)
         for i in range(1, 7):
-            submission_df.at[idx][f"B{i}"] = output[i-1]
+            submission_df.at[idx, f"B{i}"] = output[i-1]
 
     submission_df.to_csv("/kaggle/working/submission.csv", index=False)
