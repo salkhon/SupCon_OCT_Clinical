@@ -49,6 +49,7 @@ if __name__ == "__main__":
         main_supervised_fusion()
 
     elif opt.multi == 1 and (opt.super == 1 or opt.super == 5):
+        print("doing supervised training")
         main_supervised_multilabel()
 
     elif opt.multi == 1 and opt.super == 2:

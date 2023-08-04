@@ -127,7 +127,7 @@ def main_supervised_multilabel_fusion():
 
     for i in range(0, 1):
     # training routine
-        model = SupCEResNet_Fusion(name='resnet18',num_classes=5)
+        model = SupCEResNet_Fusion(name='resnet50',num_classes=6)
         model = model.to(device)
         criterion = torch.nn.BCEWithLogitsLoss()
         criterion = criterion.to(device)
