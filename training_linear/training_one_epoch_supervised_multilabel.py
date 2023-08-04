@@ -73,7 +73,7 @@ def train_supervised_multilabel(train_loader, model, criterion, optimizer, epoch
         # print info
         if (idx + 1) % opt.print_freq == 0:
             print(
-                "Train: [{0}][{1}/{2}]\t loss: {:2f}".format(
+                "Train: [{}][{}/{}]\t loss: {:2f}".format(
                     epoch, idx + 1, len(train_loader), losses.avg
                 )
             )
