@@ -72,7 +72,11 @@ def train_supervised_multilabel(train_loader, model, criterion, optimizer, epoch
 
         # print info
         if (idx + 1) % opt.print_freq == 0:
-            print("Train: [{0}][{1}/{2}]\t".format(epoch, idx + 1, len(train_loader)))
+            print(
+                "Train: [{0}][{1}/{2}]\t loss: {:2f}".format(
+                    epoch, idx + 1, len(train_loader), losses.avg
+                )
+            )
 
             sys.stdout.flush()
 
@@ -92,9 +96,7 @@ def validate_supervised_multilabel(val_loader, model, criterion, opt):
     out_list_f = []
     with torch.no_grad():
         end = time.time()
-        for idx, (image, bio_tensor) in enumerate(
-            val_loader
-        ):
+        for idx, (image, bio_tensor) in enumerate(val_loader):
             images = image.float().to(device)
             labels = bio_tensor
 

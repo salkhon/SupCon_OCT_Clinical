@@ -22,7 +22,7 @@ def parse_option():
                         help='number of training epochs')
     parser.add_argument('--biomarker', type=str, default='fluid_irf')
     # optimization
-    parser.add_argument('--learning_rate', type=float, default=0.001,
+    parser.add_argument('--learning_rate', type=float, default=0.002,
                         help='learning rate')
     parser.add_argument('--patient_lambda', type=float, default=1,
                         help='learning rate')
