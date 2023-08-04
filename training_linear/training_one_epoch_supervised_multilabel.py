@@ -39,7 +39,7 @@ def train_supervised_multilabel(train_loader, model, criterion, optimizer, epoch
     device = opt.device
     end = time.time()
 
-    for idx, (image, bio_tensor, eye_id, bcva, cst, patient) in enumerate(train_loader):
+    for idx, (image, bio_tensor) in enumerate(train_loader):
         data_time.update(time.time() - end)
         labels = bio_tensor
         images = image.to(device)
@@ -92,7 +92,7 @@ def validate_supervised_multilabel(val_loader, model, criterion, opt):
     out_list_f = []
     with torch.no_grad():
         end = time.time()
-        for idx, (image, bio_tensor, eye_id, bcva, cst, patient) in enumerate(
+        for idx, (image, bio_tensor) in enumerate(
             val_loader
         ):
             images = image.float().to(device)
