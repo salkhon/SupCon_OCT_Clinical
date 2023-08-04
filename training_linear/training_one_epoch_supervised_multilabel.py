@@ -22,6 +22,10 @@ from sklearn.metrics import (
 from models.resnet import SupCEResNet, SupCEResNet_Original
 import torch.nn.functional as F
 import pandas as pd
+from torchvision import transforms
+from pathlib import Path
+from PIL import Image
+from tqdm import tqdm
 
 
 def train_supervised_multilabel(train_loader, model, criterion, optimizer, epoch, opt):
@@ -123,6 +127,38 @@ def validate_supervised_multilabel(val_loader, model, criterion, opt):
     return losses.avg, r
 
 
+def inference_on_test_images(opt, model):
+    # create submission file
+    val_transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=0.1706, std=0.2112),
+        ]
+    )
+    submission_df = pd.read_csv(opt.submission_path)
+    for idx, row in tqdm(submission_df.iterrows(), total=len(submission_df)):
+        img_path = Path(
+            opt.submission_img_path,
+            row["Path (Trial/Image Type/Subject/Visit/Eye/Image Name)"],
+        )
+        image = Image.open(img_path).convert("L")
+        image = np.array(image)
+        image = Image.fromarray(image)
+        image = val_transform(image)
+        image = image.unsqueeze(0)
+        image = image.float().to(opt.device)
+        output = model(image)
+        output = torch.round(torch.sigmoid(output))
+        output = output.squeeze(0)
+        for i in range(1, 7):
+            submission_df.at[idx, f"B{i}"] = int(output[i - 1])
+
+    submission_df.iloc[:, 1:] = submission_df.iloc[:, 1:].astype(int)
+
+    submission_df.to_csv("/kaggle/working/submission.csv", index=False)
+
+
 def main_supervised_multilabel():
     best_acc = 0
     opt = parse_option()
@@ -139,12 +175,13 @@ def main_supervised_multilabel():
         if opt.super == 5:
             model = SupCEResNet_Original(name="resnet50", num_classes=16)
         else:
-            model = SupCEResNet_Original(name="resnet50", num_classes=6)
+            model = SupCEResNet_Original(name="resnet101", num_classes=6)
         model = model.to(device)
 
-        print("Loading checkpoint weights")
-        ckpt = torch.load(opt.chpt, map_location="cpu")
-        model.load_state_dict(ckpt["model"])
+        # need only encoder weights
+        # print("Loading checkpoint weights")
+        # ckpt = torch.load(opt.chpt, map_location="cpu")
+        # model.load_state_dict(ckpt["model"])
 
         criterion = torch.nn.BCEWithLogitsLoss()
         criterion = criterion.to(device)
@@ -160,23 +197,25 @@ def main_supervised_multilabel():
             )
             time2 = time.time()
             print(
-                "Train epoch {}, total time {:.2f}, accuracy:{:.2f}".format(
-                    epoch, time2 - time1, acc
+                "Train epoch {}, total time {:.2f}, loss {:2f}, accuracy:{:.2f}".format(
+                    epoch, time2 - time1, loss, acc
                 )
             )
 
         loss, r = validate_supervised_multilabel(test_loader, model, criterion, opt)
         r_list.append(r)
 
-    df = pd.DataFrame({"AUROC": r_list})
-    excel_name = (
-        opt.backbone_training
-        + "_"
-        + opt.biomarker
-        + opt.model
-        + str(opt.percentage)
-        + "SupervisedmultiAUROC"
-        + str(opt.patient_split)
-        + ".csv"
-    )
-    df.to_csv(excel_name, index=False)
+    # df = pd.DataFrame({"AUROC": r_list})
+    # excel_name = (
+    #     opt.backbone_training
+    #     + "_"
+    #     + opt.biomarker
+    #     + opt.model
+    #     + str(opt.percentage)
+    #     + "SupervisedmultiAUROC"
+    #     + str(opt.patient_split)
+    #     + ".csv"
+    # )
+    # df.to_csv(excel_name, index=False)
+
+    inference_on_test_images(opt, model)
