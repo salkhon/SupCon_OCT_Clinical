@@ -128,7 +128,9 @@ def set_loader_new(opt):
 
     train_transform = transforms.Compose(
         [
-            transforms.RandomResizedCrop(size=224, scale=(0.2, 1.0)),
+            transforms.RandomResizedCrop(
+                size=384 if opt.model == "vitb16" else 224, scale=(0.2, 1.0)
+            ),
             transforms.RandomHorizontalFlip(),
             transforms.RandomApply([transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)], p=0.8),
             transforms.RandomGrayscale(p=0.2),
@@ -139,7 +141,7 @@ def set_loader_new(opt):
 
     val_transform = transforms.Compose(
         [
-            transforms.Resize((224, 224)),
+            transforms.Resize((384, 384) if opt.model == "vitb16" else (224, 224)),
             transforms.ToTensor(),
             normalize,
         ]

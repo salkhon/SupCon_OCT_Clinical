@@ -133,7 +133,7 @@ def inference_on_test_images(opt, model):
     # create submission file
     val_transform = transforms.Compose(
         [
-            transforms.Resize((224, 224)),
+            transforms.Resize((384, 384) if opt.model == "vitb16" else (224, 224)),
             transforms.ToTensor(),
             transforms.Normalize(mean=0.1706, std=0.2112),
         ]
