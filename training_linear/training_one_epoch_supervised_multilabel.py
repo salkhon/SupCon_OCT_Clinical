@@ -159,6 +159,7 @@ def inference_on_test_images(opt, model):
     submission_df.iloc[:, 1:] = submission_df.iloc[:, 1:].astype(int)
 
     submission_df.to_csv("/kaggle/working/submission.csv", index=False)
+    torch.save(model.state_dict(), "/kaggle/working/model.pth")
 
 
 def main_supervised_multilabel():

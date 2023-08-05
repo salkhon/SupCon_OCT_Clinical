@@ -298,9 +298,10 @@ class SupCEResNet_Original(nn.Module):
         elif "vitb16":
             print("loading vitb16")
             self.encoder = torchvision.models.vit_b_16(
-                weights=torchvision.models.ViT_B_16_Weights.IMAGENET1K_SWAG_LINEAR_V1
+                weights=torchvision.models.ViT_B_16_Weights.IMAGENET1K_SWAG_E2E_V1,
+                num_classes=6,
             )
-            pass
+            self.fc = nn.Identity()
         else:
             self.encoder = torchvision.models.resnet18(zero_init_residual=True)
             self.encoder.conv1 = nn.Conv2d(
