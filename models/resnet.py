@@ -275,7 +275,10 @@ class SupCEResNet_Original(nn.Module):
             self.fc = nn.Linear(2048, num_classes)
         elif name == "resnet101":
             print("loading resnet101")
-            self.encoder = torchvision.models.resnet101(zero_init_residual=True)
+            self.encoder = torchvision.models.resnet101(
+                weights=torchvision.models.ResNet101_Weights.IMAGENET1K_V2,
+                zero_init_residual=True,
+            )
             self.encoder.conv1 = nn.Conv2d(
                 1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
             )
