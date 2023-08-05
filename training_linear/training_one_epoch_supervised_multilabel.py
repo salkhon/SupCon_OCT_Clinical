@@ -177,7 +177,7 @@ def main_supervised_multilabel():
         if opt.super == 5:
             model = SupCEResNet_Original(name="resnet50", num_classes=16)
         else:
-            model = SupCEResNet_Original(name="resnet101", num_classes=6)
+            model = SupCEResNet_Original(name="resnet152", num_classes=6)
         model = model.to(device)
 
         # need only encoder weights
