@@ -126,26 +126,31 @@ def set_loader_new(opt):
 
     normalize = transforms.Normalize(mean=mean, std=std)
 
-    train_transform = transforms.Compose(
-        [
-            transforms.RandomResizedCrop(
-                size=384 if opt.model == "vitb16" else 224, scale=(0.2, 1.0)
-            ),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomApply([transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)], p=0.8),
-            transforms.RandomGrayscale(p=0.2),
-            transforms.ToTensor(),
-            normalize,
-        ]
-    )
+    train_composition_list = [
+        transforms.RandomResizedCrop(
+            size=384 if opt.model == "vitb16" else 224, scale=(0.2, 1.0)
+        ),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomApply([transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)], p=0.8),
+        transforms.RandomGrayscale(p=0.2),
+        transforms.ToTensor(),
+        normalize,
+    ]
 
-    val_transform = transforms.Compose(
-        [
-            transforms.Resize((384, 384) if opt.model == "vitb16" else (224, 224)),
-            transforms.ToTensor(),
-            normalize,
-        ]
-    )
+    val_composition_list = [
+        transforms.Resize((384, 384) if opt.model == "vitb16" else (224, 224)),
+        transforms.ToTensor(),
+        normalize,
+    ]
+
+    if opt.model == "vitb16":
+        channel_transformation = transforms.Grayscale(num_output_channels=3)
+        train_composition_list.insert(0, channel_transformation)
+        val_composition_list.insert(0, channel_transformation)
+
+    train_transform = transforms.Compose([])
+
+    val_transform = transforms.Compose([])
 
     if opt.dataset == "OCT":
         csv_path_train = opt.train_csv_path
