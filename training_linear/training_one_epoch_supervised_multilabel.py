@@ -129,7 +129,7 @@ def validate_supervised_multilabel(val_loader, model, criterion, opt):
     return losses.avg, r
 
 
-def inference_on_test_images(opt, model):
+def inference_on_test_images(opt, model, epoch=None):
     # create submission file
     val_transform = transforms.Compose(
         [
@@ -158,8 +158,15 @@ def inference_on_test_images(opt, model):
 
     submission_df.iloc[:, 1:] = submission_df.iloc[:, 1:].astype(int)
 
-    submission_df.to_csv("/kaggle/working/submission.csv", index=False)
-    torch.save(model.state_dict(), "/kaggle/working/model.pth")
+    csv_name = "/kaggle/working/submission.csv"
+    if epoch is not None:
+        csv_name = f"/kaggle/working/submission_epoch{epoch}.csv"
+    submission_df.to_csv(csv_name, index=False)
+
+    model_name = "/kaggle/working/model.pth"
+    if epoch is not None:
+        model_name = f"/kaggle/working/model_epoxh{epoch}.pth"
+    torch.save(model.state_dict(), model_name)
 
 
 def main_supervised_multilabel():
@@ -206,6 +213,8 @@ def main_supervised_multilabel():
                     epoch, time2 - time1, loss, acc
                 )
             )
+            if epoch % opt.save_freq == 0:
+                inference_on_test_images(opt, model, epoch)
 
         loss, r = validate_supervised_multilabel(test_loader, model, criterion, opt)
         r_list.append(r)
