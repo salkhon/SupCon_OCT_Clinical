@@ -148,9 +148,9 @@ def set_loader_new(opt):
         train_composition_list.insert(0, channel_transformation)
         val_composition_list.insert(0, channel_transformation)
 
-    train_transform = transforms.Compose([])
+    train_transform = transforms.Compose(train_composition_list)
 
-    val_transform = transforms.Compose([])
+    val_transform = transforms.Compose(val_composition_list)
 
     if opt.dataset == "OCT":
         csv_path_train = opt.train_csv_path
