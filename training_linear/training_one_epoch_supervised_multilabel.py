@@ -143,7 +143,6 @@ def inference_on_test_images(opt, model, epoch=None):
         val_composition_list.insert(0, channel_transformation)
 
     val_transform = transforms.Compose(val_composition_list)
-    val_transform = transforms.Compose(val_composition_list)
 
     submission_df = pd.read_csv(opt.submission_path)
     for idx, row in tqdm(submission_df.iterrows(), total=len(submission_df)):
