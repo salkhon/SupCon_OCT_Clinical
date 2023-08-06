@@ -131,13 +131,20 @@ def validate_supervised_multilabel(val_loader, model, criterion, opt):
 
 def inference_on_test_images(opt, model, epoch=None):
     # create submission file
-    val_transform = transforms.Compose(
-        [
-            transforms.Resize((384, 384) if opt.model == "vitb16" else (224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=0.1706, std=0.2112),
-        ]
-    )
+    normalize = transforms.Normalize(mean=0.1706, std=0.2112)
+    val_composition_list = [
+        transforms.Resize((384, 384) if opt.model == "vitb16" else (224, 224)),
+        transforms.ToTensor(),
+        normalize,
+    ]
+
+    if opt.model == "vitb16":
+        channel_transformation = transforms.Grayscale(num_output_channels=3)
+        val_composition_list.insert(0, channel_transformation)
+
+    val_transform = transforms.Compose(val_composition_list)
+    val_transform = transforms.Compose(val_composition_list)
+
     submission_df = pd.read_csv(opt.submission_path)
     for idx, row in tqdm(submission_df.iterrows(), total=len(submission_df)):
         img_path = Path(
@@ -158,14 +165,18 @@ def inference_on_test_images(opt, model, epoch=None):
 
     submission_df.iloc[:, 1:] = submission_df.iloc[:, 1:].astype(int)
 
-    csv_name = "/kaggle/working/submission.csv"
-    if epoch is not None:
-        csv_name = f"/kaggle/working/submission_epoch{epoch}.csv"
+    csv_name = (
+        "/kaggle/working/submission_final.csv"
+        if epoch is None
+        else f"/kaggle/working/submission_epoch{epoch}.csv"
+    )
     submission_df.to_csv(csv_name, index=False)
 
-    model_name = "/kaggle/working/model.pth"
-    if epoch is not None:
-        model_name = f"/kaggle/working/model_epoxh{epoch}.pth"
+    model_name = (
+        "/kaggle/working/model_final.pth"
+        if epoch is None
+        else f"/kaggle/working/model_epoch{epoch}.pth"
+    )
     torch.save(model.state_dict(), model_name)
 
 
